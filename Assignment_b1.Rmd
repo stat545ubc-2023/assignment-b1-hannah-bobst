@@ -1,0 +1,129 @@
+---
+title: "Assignment B-1"
+author: "Hannah Bobst"
+date: "November 3, 2023"
+output: 
+  html_document:
+    theme: cerulean
+    toc: true
+    toc_depth: 2
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Create Function
+In this section, a function is created to group a data set and summarize the maximum values. The variables to be maximized and groups are entered into the function as arguments. Additionally, the user can specify whether or not to remove NAs (with the default as removal).
+
+```{r}
+#' @title Group data and summarize maximums of selected variables
+#'
+#' @description max_values groups a data frame (or data frame extension) and maximizes the variables. The groups and variables to be maximized are specified in the function arguments. 
+#'
+#' @param data A data frame or tibble. 
+#' @param vars A character vector with the variables (vars) to be maximized. These variable names must correspond to columns with numerical entries. 
+#' @param ... Additional function arguments specifying the groups. These arguments must be character values corresponding to column names. 
+#' @param na.rm A Boolean variable matching the argument name "na.rm" in the "max" function. Default input is TRUE, which removes NA values. 
+#' @return A tibble summarizing the maximum values of variable by groups.
+#' 
+#' @import tidyverse
+#' @export
+ max_values <- function(data, ..., vars, na.rm = TRUE){
+  # Produce maximum of user-specified variables for user-specified groupings
+  data %>% 
+    group_by(...) %>%
+    summarize(across({{vars}}, ~ max(.x, na.rm = na.rm)))
+}
+```
+
+
+# Examples
+This section includes examples that use the *max_values* function created above. Note that while the *tidyverse* package is loaded in these examples, it will not need to be loaded once the *roxygen2* comments are attached to the function, since the tag "@param tidyverse" is used.
+
+### Example 1
+This examples uses the *penguins* data set from the *palmerpenguins* package. The function *max_values* is used to summarize the maximum values of variables *bill_length_mm*, *bill_depth_mm*, *flipper_length_mm*, and *body_mass_g* for groups *species* and *island*. NA values are removed. 
+
+```{r message=FALSE}
+# Load packages
+library(palmerpenguins)
+library(tidyverse) 
+
+# Summarize maximum values of variables bill_length_mm to body_mass_g by species and island
+max_values(data = penguins, species, island, vars = bill_length_mm:body_mass_g, na.rm = TRUE)
+```
+
+### Example 2
+This example uses the *gapminder* data set from the *gapminder* package. The function *max_values* is used to summarize the maximum values of variables *lifeExp*, *pop*, and *gdpPercap* for groups *continent* and *country*. NA values are removed. 
+
+```{r message=FALSE}
+# Load package
+library(gapminder)
+
+# Summarize maximum values of variables lifeExp to gdpPercap by continent and country
+max_values(data = gapminder, continent, country, vars = lifeExp:gdpPercap, na.rm = TRUE)
+```
+
+### Example 3
+This example uses the *gapminder* data set from the *gapminder* package. The function *max_values* is used to summarize the maximum values of variable *gdpPercap* for the group *continent*. NA values are removed.
+
+```{r message=FALSE}
+# Find maximum values of variable gdpPercap by continent
+max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)
+```
+
+
+# Tests
+This section includes various tests for the function *max_values*. 
+
+This section performs three equality tests for the function *max_values*. A test is conducted for each of Examples 1, 2, and 3 (above) to determine if the output values are calculated correctly. Each test matches the function's output to the output of the manual calculation. 
+
+### Manual Calculations
+This section includes the manual calculations for each example. This should match the output of the function for each example if it were running correctly. 
+
+```{r message=FALSE}
+# Load package for testing
+library(testthat)
+
+## Manual calculations 
+
+# Example 1
+manual_1 <- penguins %>%
+  group_by(species, island) %>%
+  summarize(across(bill_length_mm:body_mass_g, ~ max(.x, na.rm = TRUE)))
+# Example 2
+manual_2 <- gapminder %>% 
+  group_by(continent, country) %>%
+  summarize(across(lifeExp:gdpPercap, ~ max(.x, na.rm = TRUE)))
+# Example 3
+manual_3 <- gapminder %>% 
+  group_by(continent) %>%
+  summarize(across(gdpPercap, ~ max(.x, na.rm = TRUE)))
+```
+
+### Function Calculations
+This section includes the calculations for each example using the function *max_values*. 
+
+```{r message=FALSE}
+## Function calculations
+
+# Example 1 
+function_1 <- max_values(data = penguins, species, island, vars = bill_length_mm:body_mass_g, na.rm = TRUE)
+# Example 2
+function_2 <- max_values(data = gapminder, continent, country, vars = lifeExp:gdpPercap, na.rm = TRUE)
+# Example 3
+function_3 <- max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)
+```
+
+### Test for Equality
+This section tests that each manual calculation matches its corresponding function calculation. The three tests are performed in a single *test_that* function.
+
+```{r message=FALSE}
+# Tests for equality
+test_that("Output is correct", {
+  expect_equal(manual_1, function_1) 
+  expect_equal(manual_2, function_2)
+  expect_equal(manual_3, function_3)})
+```
+
