@@ -75,8 +75,6 @@ max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)
 
 
 # Tests
-This section includes various tests for the function *max_values*. 
-
 This section performs three equality tests for the function *max_values*. A test is conducted for each of Examples 1, 2, and 3 (above) to determine if the output values are calculated correctly. Each test matches the function's output to the output of the manual calculation. 
 
 ### Manual Calculations
