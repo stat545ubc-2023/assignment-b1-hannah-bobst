@@ -75,9 +75,9 @@ max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)
 
 
 # Tests
-This section performs three equality tests for the function *max_values*. Tests are conducted using Examples 1, 2, and 3 (above) to determine if the output values are calculated correctly. Each test matches the function's output to the output of the manual calculation. 
+This section performs five equality tests for the function *max_values*. The first three tests are conducted using Examples 1, 2, and 3 (above) to determine if the output values are calculated correctly. Next, a test is performed to ensure the NA removal option works as expected. The final test determines if the function performs as expected when the input data set is a data frame. Each test matches the function's output to the output of the manual calculation. 
 
-The tests using Examples 1 and 2 ensure that the function works for different data sets (*penguins* and *gapminder*). The test using Example 3 ensures that the function works for different arguments. Rather than using multiple variables and groups (such as in Examples 1 and 2), Example 3's test uses only one variable and one group. 
+The tests using Examples 1 and 2 ensure that the function works for different data sets (*penguins* and *gapminder*). The test using Example 3 ensures that the function works for different arguments. Rather than using multiple variables and groups (such as in Examples 1 and 2), Example 3's test uses only one variable and one group. The NA test ensures that setting the NA removal argument to FALSE will keep NA values in the final output. The *penguins* data set is used in this test, since it contains NAs. This test uses the same summary specifications as Example 1. The data frame test ensures that the function works properly if the data set used in the *data* argument is a data frame. It uses Example 1, but redefines the *penguins* data set from a tibble to a data frame. 
 
 ### Manual Calculations
 This section includes the manual calculations for each example. These calculations reflect what the function is expected to produce.
@@ -100,6 +100,14 @@ manual_2 <- gapminder %>%
 manual_3 <- gapminder %>% 
   group_by(continent) %>%
   summarize(across(gdpPercap, ~ max(.x, na.rm = TRUE)))
+# Example 1 (with NAs)
+manual_1_na <- penguins %>%
+  group_by(species, island) %>%
+  summarize(across(bill_length_mm:body_mass_g, ~ max(.x, na.rm = FALSE)))
+# Example 1 (as data frame)
+manual_1_df <- as.data.frame(penguins) %>%
+  group_by(species, island) %>%
+  summarize(across(bill_length_mm:body_mass_g, ~ max(.x, na.rm = TRUE)))
 ```
 
 ### Function Calculations
@@ -114,16 +122,22 @@ function_1 <- max_values(data = penguins, species, island, vars = bill_length_mm
 function_2 <- max_values(data = gapminder, continent, country, vars = lifeExp:gdpPercap, na.rm = TRUE)
 # Example 3
 function_3 <- max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)
+# Example 1 (with NAs)
+function_1_na <- max_values(data = penguins, species, island, vars = bill_length_mm:body_mass_g, na.rm = FALSE)
+# Example 1 (with data argument as a data frame)
+function_1_df <- max_values(data = as.data.frame(penguins), species, island, vars = bill_length_mm:body_mass_g, na.rm = TRUE)
 ```
 
 ### Test for Equality
-This section tests that each manual calculation matches its corresponding function calculation. The three tests are performed in a single *test_that* function.
+This section tests that each manual calculation matches its corresponding function calculation. The tests are performed in a single *test_that* function.
 
 ```{r message=FALSE}
 # Tests for equality
 test_that("Output is correct", {
   expect_equal(manual_1, function_1) 
   expect_equal(manual_2, function_2)
-  expect_equal(manual_3, function_3)})
+  expect_equal(manual_3, function_3)
+  expect_equal(manual_1_na, function_1_na)
+  expect_equal(manual_1_df, function_1_df)})
 ```
 

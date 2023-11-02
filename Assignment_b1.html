@@ -1603,16 +1603,25 @@ max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)</code></
 </div>
 <div id="tests" class="section level1">
 <h1>Tests</h1>
-<p>This section performs three equality tests for the function
-<em>max_values</em>. Tests are conducted using Examples 1, 2, and 3
-(above) to determine if the output values are calculated correctly. Each
-test matches the function’s output to the output of the manual
-calculation.</p>
+<p>This section performs five equality tests for the function
+<em>max_values</em>. The first three tests are conducted using Examples
+1, 2, and 3 (above) to determine if the output values are calculated
+correctly. Next, a test is performed to ensure the NA removal option
+works as expected. The final test determines if the function performs as
+expected when the input data set is a data frame. Each test matches the
+function’s output to the output of the manual calculation.</p>
 <p>The tests using Examples 1 and 2 ensure that the function works for
 different data sets (<em>penguins</em> and <em>gapminder</em>). The test
 using Example 3 ensures that the function works for different arguments.
 Rather than using multiple variables and groups (such as in Examples 1
-and 2), Example 3’s test uses only one variable and one group.</p>
+and 2), Example 3’s test uses only one variable and one group. The NA
+test ensures that setting the NA removal argument to FALSE will keep NA
+values in the final output. The <em>penguins</em> data set is used in
+this test, since it contains NAs. This test uses the same summary
+specifications as Example 1. The data frame test ensures that the
+function works properly if the data set used in the <em>data</em>
+argument is a data frame. It uses Example 1, but redefines the
+<em>penguins</em> data set from a tibble to a data frame.</p>
 <div id="manual-calculations" class="section level3">
 <h3>Manual Calculations</h3>
 <p>This section includes the manual calculations for each example. These
@@ -1633,7 +1642,15 @@ manual_2 &lt;- gapminder %&gt;%
 # Example 3
 manual_3 &lt;- gapminder %&gt;% 
   group_by(continent) %&gt;%
-  summarize(across(gdpPercap, ~ max(.x, na.rm = TRUE)))</code></pre>
+  summarize(across(gdpPercap, ~ max(.x, na.rm = TRUE)))
+# Example 1 (with NAs)
+manual_1_na &lt;- penguins %&gt;%
+  group_by(species, island) %&gt;%
+  summarize(across(bill_length_mm:body_mass_g, ~ max(.x, na.rm = FALSE)))
+# Example 1 (as data frame)
+manual_1_df &lt;- as.data.frame(penguins) %&gt;%
+  group_by(species, island) %&gt;%
+  summarize(across(bill_length_mm:body_mass_g, ~ max(.x, na.rm = TRUE)))</code></pre>
 </div>
 <div id="function-calculations" class="section level3">
 <h3>Function Calculations</h3>
@@ -1646,18 +1663,24 @@ function_1 &lt;- max_values(data = penguins, species, island, vars = bill_length
 # Example 2
 function_2 &lt;- max_values(data = gapminder, continent, country, vars = lifeExp:gdpPercap, na.rm = TRUE)
 # Example 3
-function_3 &lt;- max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)</code></pre>
+function_3 &lt;- max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)
+# Example 1 (with NAs)
+function_1_na &lt;- max_values(data = penguins, species, island, vars = bill_length_mm:body_mass_g, na.rm = FALSE)
+# Example 1 (with data argument as a data frame)
+function_1_df &lt;- max_values(data = as.data.frame(penguins), species, island, vars = bill_length_mm:body_mass_g, na.rm = TRUE)</code></pre>
 </div>
 <div id="test-for-equality" class="section level3">
 <h3>Test for Equality</h3>
 <p>This section tests that each manual calculation matches its
-corresponding function calculation. The three tests are performed in a
-single <em>test_that</em> function.</p>
+corresponding function calculation. The tests are performed in a single
+<em>test_that</em> function.</p>
 <pre class="r"><code># Tests for equality
 test_that(&quot;Output is correct&quot;, {
   expect_equal(manual_1, function_1) 
   expect_equal(manual_2, function_2)
-  expect_equal(manual_3, function_3)})</code></pre>
+  expect_equal(manual_3, function_3)
+  expect_equal(manual_1_na, function_1_na)
+  expect_equal(manual_1_df, function_1_df)})</code></pre>
 <pre><code>## Test passed 🌈</code></pre>
 </div>
 </div>
