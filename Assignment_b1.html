@@ -1501,9 +1501,10 @@ border-radius: 0px;
 <div id="create-function" class="section level1">
 <h1>Create Function</h1>
 <p>In this section, a function is created to group a data set and
-summarize the maximum values. The variables to be maximized and groups
-are entered into the function as arguments. Additionally, the user can
-specify whether or not to remove NAs (with the default as removal).</p>
+summarize the maximum values. The variables to be maximized and
+groupings are entered into the function as arguments. Additionally, the
+user can specify whether or not to remove NAs (with the default as
+removal).</p>
 <pre class="r"><code>#&#39; @title Group data and summarize maximums of selected variables
 #&#39;
 #&#39; @description max_values groups a data frame (or data frame extension) and maximizes the variables. The groups and variables to be maximized are specified in the function arguments. 
@@ -1528,11 +1529,11 @@ specify whether or not to remove NAs (with the default as removal).</p>
 <p>This section includes examples that use the <em>max_values</em>
 function created above. Note that while the <em>tidyverse</em> package
 is loaded in these examples, it will not need to be loaded once the
-<em>roxygen2</em> comments are attached to the function, since the tag
-“<span class="citation">@param</span> tidyverse” is used.</p>
+<em>roxygen2</em> comments are attached to the function. This is because
+the tag “<span class="citation">@param</span> tidyverse” is used.</p>
 <div id="example-1" class="section level3">
 <h3>Example 1</h3>
-<p>This examples uses the <em>penguins</em> data set from the
+<p>This example uses the <em>penguins</em> data set from the
 <em>palmerpenguins</em> package. The function <em>max_values</em> is
 used to summarize the maximum values of variables
 <em>bill_length_mm</em>, <em>bill_depth_mm</em>,
@@ -1603,15 +1604,19 @@ max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)</code></
 <div id="tests" class="section level1">
 <h1>Tests</h1>
 <p>This section performs three equality tests for the function
-<em>max_values</em>. A test is conducted for each of Examples 1, 2, and
-3 (above) to determine if the output values are calculated correctly.
-Each test matches the function’s output to the output of the manual
+<em>max_values</em>. Tests are conducted using Examples 1, 2, and 3
+(above) to determine if the output values are calculated correctly. Each
+test matches the function’s output to the output of the manual
 calculation.</p>
+<p>The tests using Examples 1 and 2 ensure that the function works for
+different data sets (<em>penguins</em> and <em>gapminder</em>). The test
+using Example 3 ensures that the function works for different arguments.
+Rather than using multiple variables and groups (such as in Examples 1
+and 2), Example 3’s test uses only one variable and one group.</p>
 <div id="manual-calculations" class="section level3">
 <h3>Manual Calculations</h3>
-<p>This section includes the manual calculations for each example. This
-should match the output of the function for each example if it were
-running correctly.</p>
+<p>This section includes the manual calculations for each example. These
+calculations reflect what the function is expected to produce.</p>
 <pre class="r"><code># Load package for testing
 library(testthat)
 
@@ -1653,7 +1658,7 @@ test_that(&quot;Output is correct&quot;, {
   expect_equal(manual_1, function_1) 
   expect_equal(manual_2, function_2)
   expect_equal(manual_3, function_3)})</code></pre>
-<pre><code>## Test passed 🥇</code></pre>
+<pre><code>## Test passed 🌈</code></pre>
 </div>
 </div>
 
@@ -1706,7 +1711,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2",
+      selectors: "h1,h2,h3",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {

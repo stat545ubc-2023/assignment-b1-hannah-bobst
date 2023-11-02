@@ -6,7 +6,7 @@ output:
   html_document:
     theme: cerulean
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     toc_float: true
 ---
 
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Create Function
-In this section, a function is created to group a data set and summarize the maximum values. The variables to be maximized and groups are entered into the function as arguments. Additionally, the user can specify whether or not to remove NAs (with the default as removal).
+In this section, a function is created to group a data set and summarize the maximum values. The variables to be maximized and groupings are entered into the function as arguments. Additionally, the user can specify whether or not to remove NAs (with the default as removal).
 
 ```{r}
 #' @title Group data and summarize maximums of selected variables
@@ -40,10 +40,10 @@ In this section, a function is created to group a data set and summarize the max
 
 
 # Examples
-This section includes examples that use the *max_values* function created above. Note that while the *tidyverse* package is loaded in these examples, it will not need to be loaded once the *roxygen2* comments are attached to the function, since the tag "@param tidyverse" is used.
+This section includes examples that use the *max_values* function created above. Note that while the *tidyverse* package is loaded in these examples, it will not need to be loaded once the *roxygen2* comments are attached to the function. This is because the tag "@param tidyverse" is used.
 
 ### Example 1
-This examples uses the *penguins* data set from the *palmerpenguins* package. The function *max_values* is used to summarize the maximum values of variables *bill_length_mm*, *bill_depth_mm*, *flipper_length_mm*, and *body_mass_g* for groups *species* and *island*. NA values are removed. 
+This example uses the *penguins* data set from the *palmerpenguins* package. The function *max_values* is used to summarize the maximum values of variables *bill_length_mm*, *bill_depth_mm*, *flipper_length_mm*, and *body_mass_g* for groups *species* and *island*. NA values are removed. 
 
 ```{r message=FALSE}
 # Load packages
@@ -75,10 +75,12 @@ max_values(data = gapminder, continent, vars = gdpPercap, na.rm = TRUE)
 
 
 # Tests
-This section performs three equality tests for the function *max_values*. A test is conducted for each of Examples 1, 2, and 3 (above) to determine if the output values are calculated correctly. Each test matches the function's output to the output of the manual calculation. 
+This section performs three equality tests for the function *max_values*. Tests are conducted using Examples 1, 2, and 3 (above) to determine if the output values are calculated correctly. Each test matches the function's output to the output of the manual calculation. 
+
+The tests using Examples 1 and 2 ensure that the function works for different data sets (*penguins* and *gapminder*). The test using Example 3 ensures that the function works for different arguments. Rather than using multiple variables and groups (such as in Examples 1 and 2), Example 3's test uses only one variable and one group. 
 
 ### Manual Calculations
-This section includes the manual calculations for each example. This should match the output of the function for each example if it were running correctly. 
+This section includes the manual calculations for each example. These calculations reflect what the function is expected to produce.
 
 ```{r message=FALSE}
 # Load package for testing
